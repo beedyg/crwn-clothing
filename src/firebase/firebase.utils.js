@@ -12,6 +12,8 @@ const config = {
   appId: "1:775629732770:web:a4755299a47126e52510fb",
 };
 
+firebase.initializeApp(config);
+
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
 
@@ -53,7 +55,19 @@ export const addCollectionAndDocuments = async (
   return await batch.commit();
 };
 
-firebase.initializeApp(config);
+export const convertCollectionsSnapshotToMap = (collections) => {
+  const transofrmedCollection = collections.docs.map((doc) => {
+    const { title, items } = doc.data();
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    };
+  });
+
+  console.log(transofrmedCollection);
+};
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
